@@ -66,70 +66,11 @@ x = x.drop(['brand','brand_enc', 'model_name','model_name_enc', 'fuel_type','fue
 # print(x)
 
 # train test split
-xTrain,xTest,yTrain,yTest = train_test_split(x,y,test_size=0.1)
+xTrain,xTest,yTrain,yTest = train_test_split(x,y,test_size=0.2)
 
 # Instantiate model with 1000 decision trees
 rf = RandomForestRegressor(n_estimators = 1000)
 rf.fit(x, y)
-'''
-# To be used when supervised training
-
-# Train the model on training data
-rf.fit(xTrain, yTrain)
-
-# Use the forest's predict method on the test data
-predictions = rf.predict(xTest)
-
-smthn = x.copy(deep=True)
-# smthn = smthn.drop(smthn.index)
-smthn = xTest.iloc[[0]]
-
-output = rf.predict(smthn)
-print(smthn)
-print(output)
-print(y.iloc[smthn.index])
-'''
-
-
-'''
-# Calculate the absolute errors
-errors = abs(predictions - yTest)
-# Print out the mean absolute error (mae)
-print('Mean Absolute Error:', round(np.mean(errors), 2))
-
-# Calculate mean absolute percentage error (MAPE)
-mape = 100 * (errors / yTest)
-# Calculate and display accuracy
-accuracy = 100 - np.mean(mape)
-print('Accuracy:', round(accuracy, 2), '%.')
-
-
-# Saving feature names for later use
-x_list = list(x.columns)
-# Get numerical feature importances
-importances = list(rf.feature_importances_)
-# List of tuples with variable and importance
-feature_importances = [(feature, round(importance, 6)) for feature, importance in zip(x_list, importances)]
-# Sort the feature importances by most important first
-feature_importances = sorted(feature_importances, key = lambda x: x[1], reverse = True)
-# Print out the feature and importances 
-[print('Variable: {:20} Importance: {}'.format(*pair)) for pair in feature_importances]
-
-
-# Set the style
-plt.style.use('fivethirtyeight')
-# list of x locations for plotting
-x_values = list(range(len(importances)))
-# Make a bar chart
-plt.bar(x_values, importances, orientation = 'vertical')
-# Tick labels for x axis
-plt.xticks(x_values, x_list, rotation='vertical')
-# Axis labels and title
-plt.ylabel('Importance')
-plt.xlabel('Variable')
-plt.title('Variable Importances')
-plt.show()
-'''
 
 import tkinter as tk
 from tkinter import ttk
