@@ -2,9 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder,OneHotEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor 
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
 
 
 cars = pd.read_csv("dataset\Dataset.csv")
@@ -69,8 +68,26 @@ x = x.drop(['brand','brand_enc', 'model_name','model_name_enc', 'fuel_type','fue
 xTrain,xTest,yTrain,yTest = train_test_split(x,y,test_size=0.2)
 
 # Instantiate model with 1000 decision trees
-rf = RandomForestRegressor(n_estimators = 1000)
+rf = ExtraTreesRegressor(n_estimators = 1000)
 rf.fit(x, y)
+ml=ExtraTreesRegressor()
+ml.fit(xTrain, yTrain)
+
+# Use the forest's predict method on the test data
+predictions = ml.predict(xTest)
+
+# Calculate the absolute errors
+errors = abs(predictions - yTest)
+# Print out the mean absolute error (mae)
+print('Mean Absolute Error:', round(np.mean(errors), 2))
+
+# Calculate mean absolute percentage error (MAPE)
+mape = 100 * (errors / yTest)
+# Calculate and display accuracy
+accuracy = 100 - np.mean(mape)
+print('Accuracy:', round(accuracy, 2), '%.')
+
+
 
 import tkinter as tk
 from tkinter import ttk
@@ -100,11 +117,10 @@ def submit():
        smthn.loc[len(smthn)] = 0
        smthn.update(input_df ,overwrite=True)
        output = rf.predict(smthn)
-       print(smthn)
+       # print(smthn)
        # Update the label with the retrieved values
        output_label.config(text=f"The Price is {output}")
 
-    
 
 root = tk.Tk()
 root.title("Input Window")
